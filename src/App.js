@@ -81,9 +81,21 @@ class App extends Component {
     dispatch(actionCreators.setVisibilityFilter(visibility));
   };
 
-  onDeleteTodo = index => {
+  onDeleteTodo = id => {
     const { dispatch } = this.props;
-    dispatch(actionCreators.remove(index));
+    fetch(API_URL + "/" + id, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "DELETE"
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log("deleted:", result);
+        dispatch(actionCreators.remove(result.id));
+      })
+      .catch(err => console.error("Request failed", err));
   };
 
   render() {
